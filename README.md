@@ -1,31 +1,23 @@
 # Rimulib Flashback Fix
 
-A lightweight **Minecraft Fabric** compatibility mod that fixes the immediate crash when opening or playing back recordings in **Flashback** while **Rimulib** and **The Shooting Star** are installed.
+A lightweight **Minecraft Fabric** compatibility mod resolving crashes during Flashback replay playback caused by missing dimensions from **Rimulib** and **The Shooting Star**.
 
 ## 🐛 The Problem
-When opening a replay in Flashback, the mod creates a virtual `ReplayServer` where custom modded dimensions (such as `shooting_star_demo:gravitia_stage`) are not registered in the server dimension registry. 
-
-During `ServerLevelEvents.LOAD`, `Rimulib` executes `Regen.adopt` -> `WorldShapes.band` and calls `Registry.getValueOrThrow(...)` without checking if the dimension key exists, causing an immediate crash:
-```text
-java.lang.IllegalStateException: Missing key in ResourceKey[minecraft:root / minecraft:dimension]: ResourceKey[minecraft:dimension / shooting_star_demo:gravitia_stage]
-```
+Flashback initializes a virtual `ReplayServer` during replays where custom dimensions like `shooting_star_demo:gravitia_stage` remain unregistered. This triggers an `IllegalStateException` in Rimulib during `ServerLevelEvents.LOAD` when it calls `Registry.getValueOrThrow(...)` on the missing dimension.
 
 ## 🛠️ How It Works
-This mod uses a safe `@Pseudo` Fabric Mixin to intercept `cyou.rimuru.rimulib.world.Regen.adopt` at the `HEAD` of the method. If the active server instance belongs to Flashback's `ReplayServer`, the method execution is safely canceled before it attempts to look up unregistered custom dimensions.
+A Fabric Mixin intercepts `net.minecraft.core.Registry#getValueOrThrow` at `HEAD`. If the lookup for `shooting_star_demo:gravitia_stage` fails in an environment lacking custom dimensions, it safely returns `null` rather than crashing.
 
-- **Client/Server Safe:** Uses `"required": false` and `defaultRequire = 0`, meaning it will never crash your game even if `Rimulib` updates or changes its internal methods.
-- **Zero Performance Impact:** Only checks the server class once upon world/replay load.
+- **Multi-Version Wrapper Compatible:** Supports runtime class-unpacked `rimulib_multi` containers.
+- **Zero Performance Impact:** Minimal overhead restricted to specific dimension lookups.
 
 ## 📥 Installation
-1. Ensure you have **Fabric Loader** installed for your Minecraft version (tested on **Minecraft 26.3**).
-2. Download the latest `.jar` file from the **Releases** or **Actions** tab (make sure not to use the `-sources.jar` file).
-3. Drop the `.jar` file into your `.minecraft/mods` folder alongside `Rimulib`, `The Shooting Star`, and `Flashback`.
+1. Install **Fabric Loader** (tested on Minecraft 26.3 / Java 25).
+2. Place the `.jar` file (avoiding `-sources.jar`) into your `mods` folder with Rimulib, The Shooting Star, and Flashback.
 
-## 📋 Tested Versions
-- **Minecraft:** 26.3 (Fabric)
-- **Rimulib:** 1.3.0
-- **The Shooting Star (Demo):** 1.6.0-demo
-- **Flashback:** 0.43.6
+## 📋 Tested Environments
+- **Minecraft:** 26.3 (Fabric) | **Java:** 25
+- **Rimulib:** 1.3.0 | **The Shooting Star (Demo):** 1.6.0-demo | **Flashback:** 0.43.6
 
 ## 📄 License
-This project is open-source and free to include in any modpack.
+Licensed under **CC0-1.0** (Open Source / Modpack friendly).
