@@ -1,6 +1,6 @@
 package com.fix.rimulib.mixin;
 
-import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Mixin(MappedRegistry.class)
-public abstract class ExampleMixin<T> {
+@Mixin(Registry.class)
+public interface ExampleMixin<T> {
 
     @Unique
-    private static final Logger RIMULIB_FIX_LOGGER = LoggerFactory.getLogger("RimulibFlashbackFix");
+    Logger RIMULIB_FIX_LOGGER = LoggerFactory.getLogger("RimulibFlashbackFix");
 
     @Unique
-    private static final Set<String> LOGGED_MISSING_KEYS = ConcurrentHashMap.newKeySet();
+    Set<String> LOGGED_MISSING_KEYS = ConcurrentHashMap.newKeySet();
 
     @Unique
     private static boolean isProtectedModDimension(String keyStr) {
@@ -56,7 +56,7 @@ public abstract class ExampleMixin<T> {
         }
 
         @SuppressWarnings("unchecked")
-        MappedRegistry<T> registry = (MappedRegistry<T>) (Object) this;
+        Registry<T> registry = (Registry<T>) this;
 
         if (!registry.containsKey(key) && isReplayOrVirtualContext()) {
             if (LOGGED_MISSING_KEYS.add(keyString)) {
