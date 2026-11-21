@@ -3,13 +3,13 @@
 	"id": "rimulib-flashback-fix",
 	"version": "${version}",
 	"name": "Rimulib Flashback Fix",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Fixes crashes in Rimulib and The Shooting Star when opening replays in Flashback.",
 	"authors": [
-		"Me!"
+		"Vadim_Tychkov"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com",
+		"sources": "https://github.com"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/rimulib-flashback-fix/icon.png",
@@ -23,11 +23,7 @@
 		]
 	},
 	"mixins": [
-		"rimulib-flashback-fix.mixins.json",
-		{
-			"config": "rimulib-flashback-fix.client.mixins.json",
-			"environment": "client"
-		}
+		"rimulib_flashback_fix.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.20.1",
