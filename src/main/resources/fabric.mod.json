@@ -23,7 +23,7 @@
 		]
 	},
 	"mixins": [
-		"rimulib_flashback_fix.mixins.json"
+		"rimulib-flashback-fix.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.20.1",
