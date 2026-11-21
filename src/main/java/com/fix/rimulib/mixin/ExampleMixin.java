@@ -46,7 +46,7 @@ public abstract class ExampleMixin<T> {
 
     @Inject(method = "getValueOrThrow", at = @At("HEAD"), cancellable = true)
     private void onGetValueOrThrow(ResourceKey<T> key, CallbackInfoReturnable<T> cir) {
-        if (key == null || key.location() == null) {
+if (key == null || key.location() == null) {
             return;
         }
 
